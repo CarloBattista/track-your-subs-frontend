@@ -1,0 +1,86 @@
+import { reactive } from "vue";
+
+export const store = reactive({
+    pattern: [
+        {
+            id: 0,
+            logo: "https://www.edigitalagency.com.au/wp-content/uploads/netflix-icon-white.png",
+            name: "Netflix",
+            price: "€17.99",
+            bgColor: "#e50914",
+            color: "white",
+        },
+        {
+            id: 1,
+            logo: "https://amazonuk.gcs-web.com/system/files-encrypted/nasdaq_kms/inline-images/Prime_Video_Logo.png",
+            name: "Prime Video",
+            price: "€5.99",
+            bgColor: "#1AA1FD",
+            color: "black",
+        },
+        {
+            id: 2,
+            logo: "https://uxwing.com/wp-content/themes/uxwing/download/brands-and-social-media/spotify-white-icon.png",
+            name: "Spotify",
+            price: "€9.99",
+            bgColor: "#1db954",
+            color: "white",
+        },
+        {
+            id: 3,
+            logo: "https://cdn2.steamgriddb.com/logo_thumb/dde1f8d18bc7c81320adf6c8c2058326.png",
+            name: "Disney+",
+            price: "€8.99",
+            bgColor: "#020E40",
+            color: "white",
+        },
+        {
+            id: 4,
+            logo: "https://zeevector.com/wp-content/uploads/Hulu-Logo-PNG-White@zeevector.png",
+            name: "Hulu",
+            price: "€5.99",
+            bgColor: "#1ce783",
+            color: "black",
+        },
+        {
+            id: 5,
+            logo: "https://support.tunecore.com/hc/article_attachments/11027831390996",
+            name: "Apple Music",
+            price: "€9.99",
+            bgColor: "#ff2e2e",
+            color: "white",
+        },
+        {
+            id: 6,
+            logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Microsoft_logo.svg/2048px-Microsoft_logo.svg.png",
+            name: "Microsoft 365",
+            price: "€10.99",
+            bgColor: "#F3F3F3",
+            color: "black",
+        },
+        {
+            id: 7,
+            logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/Google_One_logo.svg/1012px-Google_One_logo.svg.png",
+            name: "Google One",
+            price: "€1.99",
+            bgColor: "#FAFAFA",
+            color: "black",
+        },
+        {
+            id: 8,
+            logo: "https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/5fbef0ad-821e-42ff-bd50-c54a0742abc7/dfudrq1-f161a753-d067-4c18-84f6-ca87785a41fe.png?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiJcL2ZcLzVmYmVmMGFkLTgyMWUtNDJmZi1iZDUwLWM1NGEwNzQyYWJjN1wvZGZ1ZHJxMS1mMTYxYTc1My1kMDY3LTRjMTgtODRmNi1jYTg3Nzg1YTQxZmUucG5nIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.6vm5FkCJYrsG9Qh3xfbV0LMEi43AbT5cqqJinwJSLZM",
+            name: "Max",
+            price: "€14.99",
+            bgColor: "#002BE7",
+            color: "white",
+        },
+        {
+            id: 9,
+            logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/06/DAZN_Logo_Master.svg/2048px-DAZN_Logo_Master.svg.png",
+            name: "DAZN",
+            price: "€39.99",
+            bgColor: "#F7FF1A",
+            color: "black",
+        },
+    ]
+});
