@@ -8,12 +8,25 @@ export default createStore({
     user: null,
     isAuthenticated: false,
   },
-  mutations: {},
+  mutations: {
+    setUser(state, user) {
+      state.user = user;
+      state.isAuthenticated = true;
+    },
+    clearUser(state) {
+      state.user = null;
+      state.isAuthenticated = false;
+    },
+  },
   actions: {},
-  getters: {},
+  getters: {
+    isAuthenticated: (state) => state.isAuthenticated,
+    getUser: (state) => state.user,
+  },
   plugins: [
     createPersistedState({
       key: "tys-ky-cb-a83037wq",
+      paths: ["user"],
     }),
   ],
 });

@@ -19,10 +19,20 @@ body {
 
 body {
   font-family: "Poppins", sans-serif;
-  background: black;
-  color: white;
+  background-color: white;
+  color: black;
   -webkit-font-smoothing: antialiased;
   user-select: none;
+}
+
+body.bd_dark {
+  background-color: black;
+  color: white;
+}
+
+body.bd_light {
+  background-color: white;
+  color: black;
 }
 
 img,

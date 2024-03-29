@@ -65,20 +65,20 @@ export default {
 }
 
 .btn.primary{
-    background-color: black;
+    background-color: rgba(34, 34, 34, 1);
 }
 
 .btn.primary:hover {
-    background-color: rgba(0, 0, 0, .5);
+    background-color: rgba(34, 34, 34, .8);
 }
 
 .btn.primary .wrap_icon i,
 .btn.primary .label{
-    color: white;
+    color: rgba(255, 255, 255, 1);
 }
 
 .btn.secondary{
-    background-color: white;
+    background-color: rgba(255, 255, 255, 1);
 }
 
 .btn.secondary:hover {
@@ -87,6 +87,6 @@ export default {
 
 .btn.secondary .wrap_icon i,
 .btn.secondary .label{
-    color: black;
+    color: rgba(34, 34, 34, 1);
 }
 </style>
