@@ -106,5 +106,7 @@ export const store = reactive({
             bgColor: "white",
             color: "black",
         },
-    ]
+    ],
+
+    loadingUserServices: false,
 });

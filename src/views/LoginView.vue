@@ -35,12 +35,15 @@
 
 <script>
 import { mapMutations, mapGetters } from 'vuex';
+import { store } from '../data/store';
 import axios from 'axios';
 
 export default {
     name: "LoginView",
     data() {
         return {
+            store,
+
             userData: {
                 email: "",
                 password: "",

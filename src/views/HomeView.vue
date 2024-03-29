@@ -15,31 +15,48 @@
                             <div class="head_row">Utente dal:</div>
                             <div class="body_row">{{ formattedCreatedAt }}</div>
                         </div>
-                        <div class="row">
+                        <div class="row" v-if="numberOfActiveSubscriptions >= 1">
                             <div class="head_row">
                                 <span class="body_row">{{ numberOfActiveSubscriptions }}</span>
                                 <span v-if="numberOfActiveSubscriptions === 1"> Abbonamento attivo</span>
-                                <span v-if="numberOfActiveSubscriptions >= 2 || numberOfActiveSubscriptions === 0"> Abbonamenti attivi</span>
+                                <span v-if="numberOfActiveSubscriptions >= 2 || numberOfActiveSubscriptions === 0">
+                                    Abbonamenti attivi</span>
                             </div>
                         </div>
-                        <div class="row">
+                        <div class="row" v-if="numberOfExpiredSubscriptions >= 1">
                             <div class="head_row">
                                 <span class="body_row">{{ numberOfExpiredSubscriptions }}</span>
                                 <span v-if="numberOfExpiredSubscriptions === 1"> Abbonamento scaduto</span>
-                                <span v-if="numberOfExpiredSubscriptions >= 2 || numberOfActiveSubscriptions === 0"> Abbonamenti scaduti</span>
+                                <span v-if="numberOfExpiredSubscriptions >= 2 || numberOfActiveSubscriptions === 0">
+                                    Abbonamenti scaduti</span>
                             </div>
+                        </div>
+                        <div class="row" v-if="userServices.length >= 1">
+                            <div class="head_row">Spese mensili:</div>
+                            <div class="body_row">&euro; {{ calculateMonthlyTotal }}</div>
+                        </div>
+                        <div class="row" v-if="userServices.length >= 1">
+                            <div class="head_row">Spese annuali:</div>
+                            <div class="body_row">&euro; {{ calculateAnnualTotal }}</div>
                         </div>
                     </div>
                 </div>
-
-                <div class="wrap_form_add_sub">
+                <ButtonComp type="primary" :hasIcon="false" icon="" :hasLabel="true" label="Aggiungi abbonamento"
+                    @click="handleInAddSub" v-if="!isInCreateSub" />
+                <div class="wrap_form_add_sub" v-if="isInCreateSub">
+                    <div class="wrap_ct">
+                        <ServiceCard type="preview" :bgColorCard="dataCreateService.bgColorCard"
+                            :serviceSelect="serviceSelect" :dataCreateService="dataCreateService" />
+                    </div>
                     <form @submit.prevent>
                         <div class="wrap_field">
                             <div class="btn_dpd" @click="handleMenuDpd('servicesMenu')">
                                 <span class="label_btn">{{ serviceSelect.name }}</span>
                                 <i class="ri-arrow-down-s-line"></i>
-                                <div class="menu_dpd_btn" :class="{ show: servicesMenuIsOpen }" v-if="servicesMenuIsOpen">
-                                    <div class="row_select" v-for="(serv, index) in services" :key="index" @click="handleSelectDpd('servicesMenu', serv)">{{ serv.name }}</div>
+                                <div class="menu_dpd_btn" :class="{ show: servicesMenuIsOpen }"
+                                    v-if="servicesMenuIsOpen">
+                                    <div class="row_select" v-for="(serv, index) in services" :key="index"
+                                        @click="handleSelectDpd('servicesMenu', serv)">{{ serv.name }}</div>
                                 </div>
                             </div>
                         </div>
@@ -53,7 +70,8 @@
                         </div>
                         <div class="wrap_field" @focusin="setFocus('startDate')" @focusout="resetFocus('startDate')">
                             <input class="input_field" id="startDateField" type="date"
-                                v-model="dataCreateService.start_date" autocomplete="off">
+                                v-model="dataCreateService.start_date" @input="updateEndDateOnStartDateChange"
+                                autocomplete="off">
                             <label class="label_field"
                                 :class="{ focussed: isStartDateFocused || dataCreateService.start_date }"
                                 for="startDateField">Prima fattura</label>
@@ -69,7 +87,8 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="wrap_field" @focusin="setFocus('endDate')" @focusout="resetFocus('endDate')">
+                        <div class="wrap_field" v-if="false" @focusin="setFocus('endDate')"
+                            @focusout="resetFocus('endDate')">
                             <input class="input_field" id="endDateField" type="date"
                                 v-model="dataCreateService.end_date" autocomplete="off">
                             <label class="label_field"
@@ -88,20 +107,34 @@
                                 <i class="ri-arrow-down-s-line"></i>
                                 <div class="menu_dpd_btn" :class="{ show: currencyMenuIsOpen }"
                                     v-if="currencyMenuIsOpen">
-                                    <div class="row_select" @click="handleSelectDpd('currencyMenu', '€')">€</div>
-                                    <div class="row_select" @click="handleSelectDpd('currencyMenu', '$')">$</div>
+                                    <div class="row_select" @click="handleSelectDpd('currencyMenu', '€')">€ - EUR</div>
+                                    <div class="row_select" @click="handleSelectDpd('currencyMenu', '$')">$ - DOL</div>
                                 </div>
                             </div>
                         </div>
                         <div class="wrap_field" v-if="false">
                             <input type="color" v-model="dataCreateService.bgColorCard">
                         </div>
-                        <ButtonComp type="primary" :hasIcon="false" icon="" :hasLabel="true" label="Aggiungi abbonamento" @click="fetchAddSub" />
+                        <ButtonComp type="primary" :hasIcon="false" icon="" :hasLabel="true"
+                            label="Aggiungi abbonamento" @click="fetchAddSub" />
+                        <ButtonComp type="tertiary" :hasIcon="false" icon="" :hasLabel="true"
+                            label="Non creare un abbonamento" @click="isInCreateSub = false" />
                     </form>
+                </div>
+                <div class="wrap_service_card on_mob" v-if="!isInCreateSub && userServices.length >= 1">
+                    <div class="wrap_head">
+                        <h2>Abbonamenti</h2>
+                    </div>
+                    <ServiceCard v-for="(elem, index) in userServices" :key="index" type="list" :userServices="elem" />
                 </div>
             </div>
             <div class="section_end">
-                <ServiceCard :bgColorCard="dataCreateService.bgColorCard" :serviceSelect="serviceSelect" :dataCreateService="dataCreateService" />
+                <div class="wrap_service_card" v-if="userServices.length >= 1">
+                    <div class="wrap_head">
+                        <h2>Abbonamenti</h2>
+                    </div>
+                    <ServiceCard v-for="(elem, index) in userServices" :key="index" type="list" :userServices="elem" />
+                </div>
             </div>
         </div>
     </div>
@@ -109,6 +142,7 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
+import { store } from '../data/store';
 import { format } from 'date-fns'
 import itLocale from 'date-fns/locale/it'
 import axios from 'axios';
@@ -126,6 +160,8 @@ export default {
     },
     data() {
         return {
+            store,
+
             services: [],
             userServices: [],
 
@@ -149,6 +185,8 @@ export default {
             servicesMenuIsOpen: false,
             cycleMenuIsOpen: false,
             currencyMenuIsOpen: false,
+
+            isInCreateSub: false,
         }
     },
     computed: {
@@ -185,6 +223,25 @@ export default {
             }
             return '';
         },
+        calculateMonthlyTotal() {
+            let total = 0;
+            for (const service of this.userServices) {
+                if (service.pivot.billing_cycle === 'month') {
+                    total += parseFloat(service.pivot.bill);
+                } else if (service.pivot.billing_cycle === 'year') {
+                    // Dividi il costo annuale per 12 per ottenere il costo mensile approssimato
+                    total += parseFloat(service.pivot.bill) / 12;
+                }
+            }
+            return total.toFixed(2);
+        },
+        calculateAnnualTotal() {
+            let total = 0;
+            for (const service of this.userServices) {
+                total += parseFloat(service.pivot.bill);
+            }
+            return total.toFixed(2);
+        }
     },
     methods: {
         setFocus(field) {
@@ -208,7 +265,7 @@ export default {
 
         formatDate(dateString) {
             const date = new Date(dateString)
-            return format(date, "dd MMMM yyyy", { locale: itLocale })
+            return format(date, "d MMMM yyyy", { locale: itLocale })
         },
 
         async fetchServices() {
@@ -228,6 +285,8 @@ export default {
         },
         async fetchUserServices() {
             try {
+                this.store.loadingUserServices = true;
+
                 const tokenUser = this.getUser?.token;
 
                 const res = await axios.get('http://localhost:8000/api/user-services', {
@@ -241,6 +300,10 @@ export default {
                 this.userServices = res.data;
             } catch (e) {
                 console.error(e);
+            } finally {
+                setTimeout(() => {
+                    this.store.loadingUserServices = false;
+                }, 550)
             }
         },
         async fetchAddSub() {
@@ -268,11 +331,45 @@ export default {
 
                 const responseData = await res.json();
 
-                console.log(responseData);
-                this.fetchUserServices();
+                if (res.ok) {
+                    this.fetchUserServices();
+                    this.isInCreateSub = false;
+                    this.dataCreateService = {
+                        description: "",
+                        start_date: "",
+                        billing_cycle: "month",
+                        end_date: "",
+                        bill: "0.00",
+                        currency: "€",
+                        bgColorCard: "#e50914",
+                    }
+                }
             } catch (e) {
                 console.error(e);
             }
+        },
+
+        updateEndDate() {
+            const startDate = new Date(this.dataCreateService.start_date);
+            let endDate = new Date(startDate);
+
+            if (this.dataCreateService.billing_cycle === 'day') {
+                // Aggiungi un giorno alla data di inizio
+                endDate.setDate(startDate.getDate() + 1);
+            } else if (this.dataCreateService.billing_cycle === 'month') {
+                // Aggiungi un mese alla data di inizio
+                endDate.setMonth(startDate.getMonth() + 1);
+            } else if (this.dataCreateService.billing_cycle === 'year') {
+                // Aggiungi un anno alla data di inizio
+                endDate.setFullYear(startDate.getFullYear() + 1);
+            }
+
+            // Aggiorna la data di fine abbonamento nel formato corretto
+            this.dataCreateService.end_date = endDate.toISOString().split('T')[0];
+        },
+        updateEndDateOnStartDateChange() {
+            // Aggiorna automaticamente la data di fine abbonamento quando viene selezionata una nuova data di inizio
+            this.updateEndDate();
         },
 
         handleMenuDpd(menuType) {
@@ -295,10 +392,17 @@ export default {
 
             if (menuType === 'cycleMenu') {
                 this.dataCreateService.billing_cycle = select;
+                this.updateEndDate();
             }
 
             if (menuType === 'currencyMenu') {
                 this.dataCreateService.currency = select;
+            }
+        },
+
+        handleInAddSub() {
+            if (!this.isInCreateSub) {
+                this.isInCreateSub = true;
             }
         },
     },
@@ -322,6 +426,7 @@ export default {
     width: 100%;
     height: 100%;
     max-width: 1024px;
+    padding: 0 3%;
     margin: 0 auto;
     display: flex;
     align-items: flex-start;
@@ -402,6 +507,12 @@ export default {
     font-weight: 600;
 }
 
+.wrap_form_add_sub {
+    display: flex;
+    gap: 16px;
+    flex-direction: column;
+}
+
 .wrap_form_add_sub form {
     display: flex;
     gap: 16px;
@@ -443,6 +554,8 @@ export default {
     left: 0;
     transform: translateY(10px) scale(1.01);
     width: 100%;
+    max-height: calc(52px * 5);
+    overflow-y: auto;
     border-radius: 8px;
     background-color: white;
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
@@ -569,12 +682,35 @@ export default {
     opacity: 1;
 }
 
-.section_end{
+.section_end {
     width: 100%;
     height: 100vh;
     display: flex;
+    align-items: flex-start;
+    justify-content: flex-end;
+}
+
+.wrap_service_card {
+    display: flex;
+    gap: 12px;
+    flex-direction: column;
+}
+
+.wrap_service_card .wrap_head h2 {
+    color: black;
+    font-size: 1.1rem;
+    font-weight: 500;
+}
+
+.wrap_service_card.on_mob {
+    display: none;
+}
+
+.wrap_ct {
+    width: 100%;
+    display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: center
 }
 
 /* Media Query's */
@@ -587,6 +723,26 @@ export default {
 @media only screen and (max-width: 980px) {
     .container_hv {
         top: 56px;
+    }
+
+    .wrap_service_card.on_mob {
+        display: flex;
+    }
+
+    .wrap_service_card:not(.on_mob) {
+        display: none;
+    }
+}
+
+@media only screen and (max-width: 550px) {
+    .section_start {
+        width: 100%;
+        max-width: 100%;
+        min-width: 390px;
+    }
+
+    .section_end {
+        display: none;
     }
 }
 </style>

@@ -1,5 +1,5 @@
 <template>
-    <div class="btn" :class="{ primary: type === 'primary', secondary: type === 'secondary' }">
+    <div class="btn" :class="{ primary: type === 'primary', secondary: type === 'secondary', tertiary: type === 'tertiary' }">
         <div class="wrap_icon" v-if="hasIcon">
             <i :class="icon"></i>
         </div>
@@ -88,5 +88,18 @@ export default {
 .btn.secondary .wrap_icon i,
 .btn.secondary .label{
     color: rgba(34, 34, 34, 1);
+}
+
+.btn.tertiary{
+    background-color: rgb(255, 60, 60, 1);
+}
+
+.btn.tertiary:hover {
+    background-color: rgb(255, 60, 60, .8);
+}
+
+.btn.tertiary .wrap_icon i,
+.btn.tertiary .label{
+    color: rgb(255, 255, 255);
 }
 </style>
